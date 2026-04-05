@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ふじたーな（@tanafuji_sec）のポートフォリオサイト。メディア企業 プロダクトセキュリティエンジニア。">
+    <title>ふじたーな | Security Engineer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+JP:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050a15;
+            --text-color: #e2e8f0;
+            --accent-primary: #00f0ff;
+            --accent-secondary: #7000ff;
+            --accent-tertiary: #ff003c;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --border-color: rgba(0, 240, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Canvas Background */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Typography & Setup */
+        h1,
+        h2,
+        h3 {
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-primary), #4facfe, var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Hero Section */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-intro {
+            font-size: 1.2rem;
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            animation: fadeIn 1.2s ease-out 0.2s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: #94a3b8;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            animation: fadeIn 1.4s ease-out 0.4s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .hero-description {
+            max-width: 600px;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 3rem;
+            animation: fadeIn 1.6s ease-out 0.6s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            animation: fadeIn 1.8s ease-out 0.8s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+            transition: all 0.4s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.3);
+            background: rgba(0, 240, 255, 0.1);
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+            z-index: 1;
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+        }
+
+        /* Cards and Elements */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .card p {
+            color: #94a3b8;
+        }
+
+        .card .tag {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0.2rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-primary);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-desc {
+            color: #94a3b8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4rem;
+            color: #64748b;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Glitch effect for title hover */
+        .hero-title:hover {
+            position: relative;
+        }
+
+        .talks-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .talk-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .talk-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent-primary);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            transform-origin: center;
+        }
+
+        .talk-item:hover {
+            background: rgba(0, 240, 255, 0.03);
+        }
+
+        .talk-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .talk-meta {
+            font-size: 0.85rem;
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .talk-title {
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .talk-title:hover {
+            color: var(--accent-primary);
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2rem;
+            }
+
+            header {
+                padding: 6rem 0;
+                height: auto;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas-bg"></canvas>
+
+    <div class="container">
+        <header>
+            <div class="hero-intro">Hi, my name is</div>
+            <h1 class="hero-title gradient-text">ふじたーな</h1>
+            <h2 class="hero-subtitle">@tanafuji_sec</h2>
+            <p class="hero-description">
+                経営学を学びながら、メディア企業でプロダクトセキュリティをやっています。<br>
+            </p>
+            <div class="social-links">
+                <a href="https://github.com/tanafuji-sec" target="_blank" rel="noopener noreferrer" class="social-link"
+                    aria-label="GitHub">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                    </svg>
+                </a>
+                <a href="https://twitter.com/tanafuji_sec" target="_blank" rel="noopener noreferrer" class="social-link"
+                    aria-label="X (Twitter)">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.95H5.078z" />
+                    </svg>
+                </a>
+
+                <a href="https://www.facebook.com/fujita.na" target="_blank" rel="noopener noreferrer"
+                    class="social-link" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+                    </svg>
+                </a>
+                <a href="https://mixi.social/@tanafuji" target="_blank" rel="noopener noreferrer" class="social-link"
+                    aria-label="Mastodon">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M23.268 5.313c-.35-2.228-2.618-3.039-2.618-3.039-2.152-.393-5.225-.494-8.65-.494h-.006c-3.415 0-6.478.092-8.625.474 0 0-2.257.801-2.599 3.018-.466 3.03-.424 7.235-.424 7.235 0 4.148.88 8.167 4.28 9.387 2.164.776 4.606.843 6.946.591 1.74-.188 3.51-.557 5.166-1.127l-.146-1.92s-2.094.618-4.103.652c-2.473.042-4.996-.285-5.325-2.871-.02-.154-.031-.318-.031-.497 2.01.597 4.417.803 6.782.723 2.502-.084 5.064-.42 7.423-1.077 3.398-.945 4.145-3.52 4.145-3.52.285-2.223.363-5.83.27-7.534zm-4.321 8.789h-2.126V9.45c0-1.423-.556-2.148-1.666-2.148-1.258 0-1.89.814-1.89 2.418v3.428h-2.103V9.72c0-1.604-.632-2.418-1.89-2.418-1.11 0-1.666.725-1.666 2.148v4.652H5.48V9.266c0-1.233.344-2.225 1.026-2.955.708-.756 1.636-1.139 2.766-1.139 1.341 0 2.308.527 2.88 1.55l.37.712.37-.712c.571-1.023 1.538-1.55 2.88-1.55 1.13 0 2.057.383 2.765 1.139.683.73 1.027 1.722 1.027 2.955v4.836z" />
+                    </svg>
+                </a>
+                <a href="https://www.linkedin.com/in/tanafuji/" target="_blank" rel="noopener noreferrer"
+                    class="social-link" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                    </svg>
+                </a>
+            </div>
+        </header>
+
+        <section id="experience">
+            <h2 class="section-title">Career / Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2022年 - 現在</div>
+                    <h3 class="timeline-title">メディア企業</h3>
+                    <p class="timeline-desc">
+                        プロダクトセキュリティエンジニア。<br>
+                        自社開発プロダクトにおけるセキュリティ横断的強化、DevSecOpsの推進、
+                        バグバウンティプログラムの企画・運営、社内外に向けたセキュリティの民主化・啓蒙活動を牽引。
+                    </p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2015年 - 2022年</div>
+                    <h3 class="timeline-title">官公庁</h3>
+                    <p class="timeline-desc">
+                        サイバーセキュリティに関する技術調査、サイバーセキュリティ関連ツール開発等。<br>
+                        高度化するサイバー攻撃の脅威に対抗するための実務経験を積む。
+                    </p>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2006年 - 2015年</div>
+                    <h3 class="timeline-title">システムエンジニア</h3>
+                    <p class="timeline-desc">
+                        受託開発企業、パッケージベンダーにて業務系システム、人事給与システム、ECサイトなどのシステム開発に携わる。<br>
+                        エンジニアとしての基礎を築き、後にセキュリティ分野へ専門性を広げる。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="activities">
+            <h2 class="section-title">Activities & Contributions</h2>
+            <div class="grid">
+                <div class="card">
+                    <span class="tag">Education</span>
+                    <h3>セキュリティ・キャンプ</h3>
+                    <p>全国大会の講師や、プロダクトセキュリティクラスのプロデューサーを務め、次世代を担うセキュリティ人材の育成に貢献。</p>
+                </div>
+                <div class="card">
+                    <span class="tag">Speaking</span>
+                    <h3>技術登壇・情報発信</h3>
+                    <p>
+                        セキュリティ関連カンファレンスへの登壇、資料公開を通じて、プロダクトセキュリティの知見をコミュニティに還元。<br><br>
+                        <a href="https://www.docswell.com/user/tanafuji-sec" target="_blank" rel="noopener noreferrer"
+                            style="color: var(--accent-primary); text-decoration: none;">&gt; 登壇資料一覧 (Docswell)</a>
+                    </p>
+                </div>
+                <div class="card">
+                    <span class="tag">RSS Feed</span>
+                    <h3>RSS フィード</h3>
+                    <p>
+                        <a href="./rss/security.xml" target="_blank" rel="noopener noreferrer"
+                            style="color: var(--accent-primary); text-decoration: none;">&gt; セキュリティ系</a><br>
+                        <a href="./rss/technology.xml" target="_blank" rel="noopener noreferrer"
+                            style="color: var(--accent-primary); text-decoration: none;">&gt; 技術系全般</a><br>
+                        <a href="./rss/management.xml" target="_blank" rel="noopener noreferrer"
+                            style="color: var(--accent-primary); text-decoration: none;">&gt; 経営系</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="presentations">
+            <h2 class="section-title">Presentations</h2>
+            <ul class="talks-list">
+                <li class="talk-item">
+                    <div class="talk-meta">2026年</div>
+                    <a href="https://go.macnica.co.jp/Entry-MNC-CSSCU-Community-20260605-TanevaVol2.html"
+                        target="_blank" rel="noopener noreferrer" class="talk-title">マクニカ Taneva Vol.2 セミナー 登壇</a>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2025年</div>
+                    <span class="talk-title">セキュリティ・キャンプ全国大会 2025 プロダクトセキュリティクラス プロデューサー</span>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2025年</div>
+                    <a href="https://boost.connpass.com/event/352850/" target="_blank" rel="noopener noreferrer"
+                        class="talk-title">Mini P3NFEST 2025: 登壇</a>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2024年</div>
+                    <a href="https://www.kyoto-su.ac.jp/wr-news/2025_ise/20250107_196_owasp.html" target="_blank"
+                        rel="noopener noreferrer" class="talk-title">京都産業大学 ランチタイムトーク × OWASP Kansai 登壇</a>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2024年</div>
+                    <span class="talk-title">セキュリティ・ミニキャンプ in 広島 2024: 未来のセキュリティ人材に求められる技術と能力</span>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2024年</div>
+                    <span class="talk-title">セキュリティ・キャンプ全国大会 2024 プロダクトセキュリティクラス プロデューサー兼講師</span>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2024年</div>
+                    <a href="https://aws.amazon.com/jp/blogs/news/aws-reinforce-2024-recap-report/" target="_blank"
+                        rel="noopener noreferrer" class="talk-title">AWS re:Inforce 2024 re:Cap 登壇</a>
+                </li>
+                <li class="talk-item">
+                    <div class="talk-meta">2023年</div>
+                    <a href="https://cloudnativedays.jp/cndt2023/talks/1992" target="_blank" rel="noopener noreferrer"
+                        class="talk-title">Cloud Native Days Tokyo 2023:<br>
+                        安全なクラウドネイティブ実現へ：内製開発におけるプロダクトセキュリティ強化の軌跡と開発チームとの協調</a>
+                </li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>&copy; <span id="year"></span> Naohiro Fujita (@tanafuji_sec). All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Scripts for animations and logic -->
+    <script>
+        // Set current year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Reveal animations on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Abstract Particle Background Animation
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const mouse = { x: null, y: null, radius: 150 };
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', () => {
+            initCanvas();
+            initParticles();
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(0, 240, 255, 0.4)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                // Movement
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse interaction
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    let forceDirectionX = dx / distance;
+                    let forceDirectionY = dy / distance;
+                    let maxDistance = mouse.radius;
+                    let force = (maxDistance - distance) / maxDistance;
+                    let directionX = forceDirectionX * force * this.density;
+                    let directionY = forceDirectionY * force * this.density;
+
+                    if (distance < mouse.radius) {
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 10000;
+            // Cap at 150 particles for performance
+            if (numberOfParticles > 150) numberOfParticles = 150;
+
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].draw();
+                particles[i].update();
+
+                // Draw lines between close particles
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 240, 255, ${0.15 * (1 - distance / 120)})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        initCanvas();
+        initParticles();
+        animate();
+    </script>
+</body>
+
+</html>
